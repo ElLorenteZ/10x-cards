@@ -72,6 +72,10 @@ Both want to turn source material into good flashcards without paying the manual
 - FR-003: A user can delete their account. Priority: must-have
   > Socrates: Counter — deletion is compliance hygiene, could slip to v2.
   > Resolution: kept as must-have; user confirmed.
+- FR-018: A user can reset a forgotten password (forgot-password / password-reset flow). Priority: nice-to-have
+  > Socrates: Counter — a recovery flow adds email-delivery plumbing before core
+  > value. Resolution: kept as droppable nice-to-have; resolved 2026-06-25 — user
+  > confirmed password reset is desirable but not required to ship.
 
 ### Flashcard sets
 - FR-004: A user can create a flashcard set. Priority: must-have
@@ -110,9 +114,10 @@ Both want to turn source material into good flashcards without paying the manual
   > Socrates: Counter — biggest timeline risk (algorithm integration).
   > Resolution: kept; SRS confirmed in MVP, integrating a ready algorithm
   > (not building one).
-- FR-015: A user can see their score/result from each completed study session (private to them). Priority: must-have
+- FR-015: A user can see their score/result from each completed study session (private to them) — the count of cards self-marked "knew it" out of those reviewed. Priority: must-have
   > Socrates: Counter — scoring needs a defined "what counts as correct" rule.
-  > Resolution: kept; exact score definition routed to Open Questions.
+  > Resolution: kept; resolved 2026-06-25 — each card is self-marked "knew it"
+  > or "forgot", and the session score is the count of "knew it" marks.
 
 ### Sharing
 - FR-016: A user can share a flashcard set with another user. Priority: nice-to-have
@@ -134,7 +139,7 @@ Both want to turn source material into good flashcards without paying the manual
 
 Given a block of source text, the app decides which pieces of it are worth learning and turns each into a question/answer flashcard phrased to balance specific detail with general-context understanding.
 
-Each flashcard has two sides: a question (front) and an answer (back). When creating or managing cards, the user sees both sides at once. During a spaced-repetition study session, the app shows only the question first; the user reveals the answer, then self-marks whether they knew it or not. That self-assessment is the input the spaced-repetition schedule uses to decide when the card should appear again, and it is also what a session's score is derived from.
+Each flashcard has two sides: a question (front) and an answer (back). When creating or managing cards, the user sees both sides at once. During a spaced-repetition study session, the app shows only the question first; the user reveals the answer, then self-marks the card with one of two states: **"knew it"** or **"forgot"**. That binary self-assessment is the input the spaced-repetition schedule uses to decide when the card should appear again, and a session's score is derived from it — the count of cards marked "knew it" out of those reviewed in the session.
 
 The spaced-repetition scheduling itself is a ready, integrated algorithm rather than a rule the product invents — the product's own domain decision is the generation step: what to turn into a card, and how to phrase it.
 
@@ -145,7 +150,8 @@ Multi-user, account-based, with a single flat role — every user is the same ki
 - Registered users authenticate to reach the app; flashcard data is private to the owning user.
 - **In MVP scope:** account creation (sign-up) and account deletion.
 - The exact authentication mechanism (password, OAuth, passwordless) is a downstream stack-selection decision and is intentionally not fixed here.
-- Password reset and email verification are not specified as MVP requirements (see Open Questions).
+- Password reset (forgot-password flow) is a droppable nice-to-have, not an MVP must-have (FR-018).
+- Email verification is not an MVP must-have; like password reset, it sits in nice-to-have scope.
 
 ## Non-Goals
 
@@ -159,5 +165,4 @@ Multi-user, account-based, with a single flat role — every user is the same ki
 
 ## Open Questions
 
-1. **What exactly counts as a study session "score" / result?** FR-015 ships the score feature but the precise definition (e.g., share of cards self-marked "knew it", or another measure) is unresolved. — Owner: user. Block: no (FR-015 needs the definition before its UI can be finalized).
-2. **Are password reset and email verification in MVP scope?** Access Control left these "open for later inclusion." — Owner: user. Block: no.
+ - None
